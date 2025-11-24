@@ -1,9 +1,10 @@
-// CONFIG: notlar ve kaynaklar
+// CONFIG: kart içeriği
 const notes = [
-  { text: '“Öğretmenler yeni nesil sizin eseriniz olacaktır.” – Atatürk', img: 'images/ataturk_teacher.jpeg' },
+  { text: '“Öğretmenler yeni nesil sizin eseriniz olacaktır.” – Atatürk', img: 'images/ataturk-flag.jpeg' },
   { text: '24 Kasım Öğretmenler Günü kutlu olsun! 🌸', img: 'images/24kasim.jpeg' },
-  { text: 'Sınıfın ışığısın, öğretmenim! ✨', img: 'images/teacher_icon.jpeg' },
-  { text: 'İyi ki varsın. Teşekkürler.' , img: 'images/celebrate.jpeg' }
+  { text: 'Güzeller güzeli bir öğretmen var buradaaa !', img: 'images/teacher_icon.png' },
+  { text: 'Sınıfın tatlı öğretmeni! ✨', img: 'images/ilkokul.png' },
+  { text: 'İyi ki varsın. Seni çok seviyorum.' }
 ];
 
 // DOM refs
@@ -18,7 +19,7 @@ const confettiCanvas = document.getElementById('confettiCanvas');
 let current = -1;
 let confettiLoaded = false;
 
-// helper: small delay
+// small delay helper
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 // lazy-load confetti lib
@@ -32,146 +33,119 @@ function ensureConfetti(){
   });
 }
 
-// show video with cinematic animation
+// show video with animation
 async function openVideo(){
-  // show overlay
   videoWrap.classList.remove('hidden');
   await wait(40);
-  videoWrap.classList.add('show'); // CSS handles video transform
+  videoWrap.classList.add('show');
 
-  // play (user gesture guaranteed from button click)
   try{
     introVideo.currentTime = 0;
-    introVideo.muted = true; // autoplay safety for some browsers
+    introVideo.muted = true; // autoplay safety
     await introVideo.play();
-    // optionally unmute after short time:
     setTimeout(()=>{ try{ introVideo.muted = false }catch(e){} }, 700);
   }catch(e){
-    // fallback: show controls if autoplay blocked
     introVideo.controls = true;
   }
 }
 
-// hide video — artık promise döndürüyor, animasyon tamamlanana kadar bekler
+// hide video (promise ile)
 function closeVideo(){
   return new Promise(resolve => {
     try{ introVideo.pause(); }catch(e){}
-    // play hide animation
     videoWrap.classList.remove('show');
-    // küçük bir timeout, CSS geçişine göre ayarla (0.45s güvenli)
     setTimeout(()=>{
       videoWrap.classList.add('hidden');
       resolve();
-    }, 480);
+    }, 420);
   });
 }
 
-// create and show next card
-async function showNextCard(autoShown = false){
-  // eğer tüm kartlar gösterildiyse finali göster
-  if(current + 1 >= notes.length){
-    showFinalCard();
-    return;
-  }
-  current++;
-  const data = notes[current];
+// render single card (sabit boyut, ortada). If no img -> center text.
+function renderCard(data){
+  cardsArea.classList.remove('hidden');
+  cardsArea.style.pointerEvents = 'auto';
+  cardsArea.innerHTML = ''; // yalnızca bir kart göster
 
-  // create card element
   const card = document.createElement('article');
   card.className = 'card';
-  const p = document.createElement('p');
-  p.textContent = data.text;
-  card.appendChild(p);
+
+  const txt = document.createElement('div');
+  txt.className = 'text';
+  txt.textContent = data.text || '';
+  card.appendChild(txt);
+
   if(data.img){
+    const mediaWrap = document.createElement('div');
+    mediaWrap.className = 'media';
     const img = document.createElement('img');
     img.src = data.img;
     img.alt = '';
-    card.appendChild(img);
+    mediaWrap.appendChild(img);
+    card.appendChild(mediaWrap);
+  } else {
+    card.classList.add('centered'); // görsel yoksa metni tam ortala
   }
 
-  // ensure cards area visible and interactable
-  cardsArea.classList.remove('hidden');
-  cardsArea.style.pointerEvents = 'auto';
-
   cardsArea.appendChild(card);
-  // allow CSS transition
-  await wait(30);
-  card.classList.add('show');
+  requestAnimationFrame(()=> card.classList.add('show'));
 
-  // show next button if there are more cards
-  if(current < notes.length - 1) nextBtn.classList.remove('hidden');
-  else nextBtn.classList.add('hidden');
-
-  // confetti small burst after card appears (only for automatic appearance or if you want always)
-  ensureConfetti().then(()=> {
-    confetti({ particleCount: 90, spread: 110, origin: { y: 0.45 } });
-  });
+  // confetti burst
+  ensureConfetti().then(()=> confetti({ particleCount: 90, spread: 110, origin: { y: 0.5 } }));
 }
 
-// final card special
-async function showFinalCard(){
-  // small celebratory card
-  const card = document.createElement('article');
-  card.className = 'card';
-  const p = document.createElement('p');
-  p.textContent = 'İyi ki varsın. 24 Kasım Öğretmenler Günü kutlu olsun ❤️';
-  card.appendChild(p);
-  const img = document.createElement('img');
-  img.src = 'images/celebrate.jpeg';
-  img.alt = '';
-  card.appendChild(img);
-
-  cardsArea.appendChild(card);
-  await wait(30);
-  card.classList.add('show');
-
-  // big confetti finale
-  ensureConfetti().then(()=> {
-    confetti({ particleCount: 220, spread: 160, origin: { y: 0.35 } });
-    setTimeout(()=> confetti({ particleCount: 300, spread: 200, origin: { y: 0.25 } }), 300);
-  });
-
-  nextBtn.classList.add('hidden');
+// show next card
+function showNextCard(){
+  current++;
+  if(current >= notes.length){
+    // finale
+    nextBtn.classList.add('hidden');
+    ensureConfetti().then(()=> {
+      confetti({ particleCount: 240, spread: 150, origin: { y: 0.35 } });
+      setTimeout(()=> confetti({ particleCount: 300, spread: 200, origin: { y: 0.25 } }), 300);
+    });
+    return;
+  }
+  renderCard(notes[current]);
+  if(current < notes.length - 1) nextBtn.classList.remove('hidden'); else nextBtn.classList.add('hidden');
 }
 
 // EVENT FLOW
 curiousBtn.addEventListener('click', async () => {
-  // cinematic open
   await openVideo();
 });
 
-// skip button
+// skip
 skipBtn.addEventListener('click', async () => {
-  // close and start cards flow
   await closeVideo();
-  // tiny delay so CSS settle
+  const intro = document.getElementById('intro');
+  if(intro) intro.remove();
+  current = -1;
   await wait(160);
   showNextCard();
 });
 
 // when video ends
 introVideo.addEventListener('ended', async () => {
-  // close video with animation (wait for close)
   await closeVideo();
-  // short pause to make soft transition
+  const intro = document.getElementById('intro');
+  if(intro) intro.remove();
   await wait(220);
-  // show first card automatically
-  showNextCard(true);
+  current = -1;
+  showNextCard();
 });
 
-// next button for advancing
+// manual next
 nextBtn.addEventListener('click', async () => {
-  // hide last card smoothly
-  const last = cardsArea.querySelector('.card:last-child');
+  const last = cardsArea.querySelector('.card');
   if(last){
     last.classList.remove('show');
-    // give transition time
     await wait(420);
   }
   showNextCard();
 });
 
-// keyboard friendly: space/enter to progress
+// keyboard friendly
 window.addEventListener('keydown', (e) => {
   if((e.key === ' ' || e.key === 'Enter') && !nextBtn.classList.contains('hidden')){
     e.preventDefault();

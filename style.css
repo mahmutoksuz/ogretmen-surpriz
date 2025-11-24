@@ -1,107 +1,121 @@
 :root{
   --accent: #ff6f61;
-  --bg-a: linear-gradient(135deg,#0f172a 0%, #0b1220 100%);
   --glass: rgba(255,255,255,0.97);
+  --sweet: #ff6f88; /* tatlı pembe tonu */
 }
 
+/* reset + temel */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(135deg,#f8f1e4 0%, #f3d6c8 100%);color:#0b1220;-webkit-font-smoothing:antialiased}
-
 .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
 
-/* Intro */
+/* intro */
 .center{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px;text-align:center;z-index:10}
 .title{font-size:clamp(20px,4vw,36px);margin:0;color:var(--accent);letter-spacing:0.2px}
 .subtitle{margin:0;color:#304155;opacity:0.9}
-
-/* big button */
 .big-btn{margin-top:6px;padding:14px 30px;border-radius:999px;border:0;background:linear-gradient(90deg,var(--accent),#ff936b);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 30px rgba(17,24,39,0.12);transition:transform .18s ease}
 .big-btn:active{transform:translateY(2px)}
 
-/* video overlay */
+/* video overlay - büyütüldü ama tam doldurmuyor */
 .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:40;backdrop-filter: blur(6px)}
-.overlay video{width:90%;max-width:960px;height:auto;border-radius:12px;box-shadow:0 30px 80px rgba(2,6,23,0.5);transform:translateY(18px) scale(.98);transition:transform .7s cubic-bezier(.2,.9,.26,1),opacity .5s}
+/* Daha büyük, responsive ve yüksekliği sınırlandırılmış video */
+.overlay video{
+  width:92vw;              /* viewport genişliğinin %92'si */
+  max-width:1300px;        /* büyük ekran sınırı */
+  max-height:95vh;         /* yüksekliğin %85'i - tam ekran değil */
+  height:auto;
+  object-fit:cover;        /* kapsayıcıyı doldursun, kırpsın */
+  border-radius:12px;
+  box-shadow:0 30px 80px rgba(2,6,23,0.5);
+  transform:translateY(18px) scale(.98);
+  transition:transform .7s cubic-bezier(.2,.9,.26,1),opacity .5s;
+}
 .overlay.show video{transform:translateY(0) scale(1);opacity:1}
-
-/* skip button */
 .skip-btn{position:fixed;right:20px;top:20px;background:#fff0;border:0;padding:10px 14px;border-radius:10px;color:white;background:rgba(255,255,255,0.12);backdrop-filter: blur(4px);cursor:pointer;z-index:45}
 
-/* cards area */
+/* CARDS (orta ekranda sabit boyut: ekranın %75'i) */
 .cards-area{
   position:fixed;
   inset:0;
   display:flex;
-  flex-direction:column;
   align-items:center;
-  justify-content:flex-end;
-  padding-bottom:80px;
-  gap:10px;
+  justify-content:center;
   z-index:50;
   pointer-events:none;
 }
 
-/* Kart tasarımı küçültülmüş ve daha sıkı */
+/* sabit boyutlu kart */
 .card{
-  width:min(600px,85%);
-  max-width:600px;
+  width:75vw;                 /* ekranın %75'i genişlik */
+  max-width:1000px;
+  height:75vh;                /* ekranın %75'i yüksekliği */
   background:var(--glass);
-  padding:16px;
-  border-radius:12px;
-  box-shadow:0 12px 32px rgba(2,6,23,0.10);
-  transform:translateY(20px) scale(.98);
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 30px 80px rgba(2,6,23,0.14);
+  transform:translateY(18px) scale(.99);
   opacity:0;
-  transition:transform .6s cubic-bezier(.2,.9,.26,1),opacity .4s;
+  transition:transform .6s cubic-bezier(.2,.9,.26,1),opacity .45s,box-shadow .3s;
   pointer-events:auto;
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
 }
+.card.show{ transform:none; opacity:1; }
 
-/* Gösterim sınıfı */
-.card.show{
-  transform:translateY(0) scale(1);
-  opacity:1;
-}
-
-/* Metin ve görsel boyutları */
-.card p{
-  margin:0;
+/* içerik düzeni: metin üstte, görsel alt kısımda büyük yer tutuyor */
+.card .text{
+  flex: 0 0 auto;
   color:#09213a;
-  font-size:0.95rem;
-  line-height:1.4;
+  font-size:1.05rem;
+  line-height:1.45;
+  margin-bottom:12px;
 }
-
-/* Resimler artık sabit yüksekliğe sahip ve içi dolduracak şekilde */
-.card img{
-  width:100%;
-  max-height:400px;
-  height:100%;
-  object-fit:cover;
-  margin-top:10px;
-  border-radius:10px;
+.card .media{
+  flex: 1 1 auto;
   display:block;
+  width:100%;
+  height:100%;
+  border-radius:10px;
+  overflow:hidden;
+}
+.card .media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;       /* içeriği doldur, kırp */
+  object-position:center;
+  display:block;
+  border-radius:10px;
 }
 
-/* Küçük ekranlar için daha sıkı ayar */
-@media (max-width:1080px){
-  .cards-area{padding-bottom:60px; gap:10px}
-  .card{width:92%; max-width:480px; padding:12px}
-  .card p{font-size:0.9rem}
-  .card img{max-height:180px; height:180px}
-  .next-btn{bottom:16px;padding:10px 22px}
+/* eğer kartta görsel yoksa metni ortala (ve tatlı renk uygula) */
+.card.centered{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.card.centered .text{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:1.15rem;
+  line-height:1.4;
+  color:var(--sweet);     /* tatlı pembe renk burada uygulanıyor */
+  font-weight:600;
 }
 
 /* next button */
 .next-btn{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;padding:12px 28px;border-radius:999px;border:0;background:linear-gradient(90deg,var(--accent),#ff8a6b);color:white;font-weight:700;z-index:60;cursor:pointer;box-shadow:0 12px 32px rgba(17,24,39,0.12)}
 .next-btn.hidden{display:none}
 
-/* hidden util */
+/* utilities */
 .hidden{display:none}
-
-/* confetti canvas */
 .confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:62}
 
-/* small responsive */
-@media (max-width:640px){
-  .overlay video{width:96%}
-  .title{font-size:26px}
-  .subtitle{font-size:14px}
-}
+/* responsive: mobil için kart boyutunu küçült */
+@media (max-width:900px){ .card{width:94vw;height:75vh} }
+@media (max-width:520px){ .card{width:96vw;height:65vh;padding:12px} .card .text{font-size:0.95rem} }
