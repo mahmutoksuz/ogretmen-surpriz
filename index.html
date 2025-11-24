@@ -1,25 +1,39 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Öğretmenler Günü Sürprizi</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sürpriz — Merak Et</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div id="welcome">
-    <h1>Senin için bir sürprizim var...</h1>
-    <button id="startBtn">Başla</button>
-</div>
+  <main class="stage">
+    <!-- Intro metin + buton -->
+    <section id="intro" class="center">
+      <h1 class="title">Bugün bir sürpriz var...</h1>
+      <p class="subtitle">Biraz merak, biraz sinema, biraz duygusallık. Hazır mısın?</p>
+      <button id="curiousBtn" class="big-btn">Merak ediyorum</button>
+    </section>
 
-<div id="player-container" style="display:none;">
-    <div id="player"></div>
-</div>
+    <!-- Video kapsayıcı (başta gizli) -->
+    <div id="videoWrap" class="overlay hidden" aria-hidden="true">
+      <video id="introVideo" playsinline webkit-playsinline preload="auto" src="images/intro.mp4"></video>
+      <button id="skipBtn" class="skip-btn" title="Videoyu geç">Geç</button>
+    </div>
 
-<div id="confetti-container"></div>
+    <!-- Kartlar bölümü (başta gizli) -->
+    <section id="cardsArea" class="cards-area hidden" aria-live="polite">
+      <!-- Kartlar JS ile eklenecek -->
+    </section>
 
-<script src="https://www.youtube.com/iframe_api"></script>
+    <!-- ortada alt buton (kartlar için) -->
+    <button id="nextBtn" class="next-btn hidden">Sonraki</button>
+
+    <!-- confetti canvas (opsiyonel) -->
+    <canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
+  </main>
+
 <script src="script.js"></script>
 </body>
 </html>

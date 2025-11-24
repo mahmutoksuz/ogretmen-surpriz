@@ -1,110 +1,107 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Arial', sans-serif;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background 1s ease;
+:root{
+  --accent: #ff6f61;
+  --bg-a: linear-gradient(135deg,#0f172a 0%, #0b1220 100%);
+  --glass: rgba(255,255,255,0.97);
 }
 
-/* Açılış ekranı */
-#welcome {
-    position: absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
-    background: linear-gradient(135deg, #ffecd2, #fcb69f);
-    transition: opacity 1s ease;
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(135deg,#f8f1e4 0%, #f3d6c8 100%);color:#0b1220;-webkit-font-smoothing:antialiased}
+
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* Intro */
+.center{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px;text-align:center;z-index:10}
+.title{font-size:clamp(20px,4vw,44px);margin:0;color:var(--accent);letter-spacing:0.2px}
+.subtitle{margin:0;color:#304155;opacity:0.9}
+
+/* big button */
+.big-btn{margin-top:6px;padding:14px 30px;border-radius:999px;border:0;background:linear-gradient(90deg,var(--accent),#ff936b);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 30px rgba(17,24,39,0.12);transition:transform .18s ease}
+.big-btn:active{transform:translateY(2px)}
+
+/* video overlay */
+.overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:40;backdrop-filter: blur(6px)}
+.overlay video{width:80%;max-width:1200px;height:auto;border-radius:12px;box-shadow:0 30px 80px rgba(2,6,23,0.5);transform:translateY(18px) scale(.98);transition:transform .7s cubic-bezier(.2,.9,.26,1),opacity .5s}
+.overlay.show video{transform:translateY(0) scale(1);opacity:1}
+
+/* skip button */
+.skip-btn{position:fixed;right:20px;top:20px;background:#fff0;border:0;padding:10px 14px;border-radius:10px;color:white;background:rgba(255,255,255,0.12);backdrop-filter: blur(4px);cursor:pointer;z-index:45}
+
+/* cards area */
+.cards-area{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  padding-bottom:100px;
+  gap:14px;
+  z-index:50;
+  pointer-events:none;
 }
 
-#welcome h1 {
-    font-size: 3em;
-    color: #fff;
-    margin-bottom: 20px;
+/* Kart tasarımı küçültülmüş ve daha sıkı */
+.card{
+  width:min(640px,86%);
+  max-width:640px;
+  background:var(--glass);
+  padding:18px 18px;
+  border-radius:12px;
+  box-shadow:0 16px 40px rgba(2,6,23,0.10);
+  transform:translateY(28px) scale(.985);
+  opacity:0;
+  transition:transform .7s cubic-bezier(.2,.9,.26,1),opacity .5s;
+  pointer-events:auto;
+  overflow:hidden;
 }
 
-#startBtn {
-    padding: 15px 40px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 30px;
-    background-color: #fff;
-    color: #ff6f61;
-    cursor: pointer;
-    transition: transform 0.3s, background 0.3s;
-    position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+/* Gösterim sınıfı */
+.card.show{
+  transform:translateY(0) scale(1);
+  opacity:1;
 }
 
-#startBtn:hover {
-    transform: translateX(-50%) scale(1.1);
+/* Metin ve görsel boyutları */
+.card p{
+  margin:0;
+  color:#09213a;
+  font-size:0.98rem;
+  line-height:1.45;
 }
 
-/* Notlar */
-.note {
-    position: absolute;
-    width: 70%;
-    max-width: 400px;
-    padding: 25px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 20px;
-    text-align: center;
-    font-size: 1.3em;
-    opacity: 0;
-    transform: translateY(50px) scale(0.8);
-    transition: all 1s ease;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+/* Resimler artık sabit yüksekliğe sahip ve içi dolduracak şekilde */
+.card img{
+  width:100%;
+  max-height:1080px;
+  height:100%;
+  object-fit:cover;
+  margin-top:12px;
+  border-radius:10px;
+  display:block;
 }
 
-.note.show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+/* Küçük ekranlar için daha sıkı ayar */
+@media (max-width:1080px){
+  .cards-area{padding-bottom:80px; gap:12px}
+  .card{width:92%; max-width:520px; padding:14px}
+  .card p{font-size:0.95rem}
+  .card img{max-height:180px; height:180px}
+  .next-btn{bottom:18px;padding:10px 22px}
 }
 
-.note img {
-    max-width: 100%;
-    margin-top: 15px;
-    border-radius: 10px;
-}
+/* next button */
+.next-btn{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;padding:12px 28px;border-radius:999px;border:0;background:linear-gradient(90deg,var(--accent),#ff8a6b);color:white;font-weight:700;z-index:60;cursor:pointer;box-shadow:0 14px 36px rgba(17,24,39,0.12)}
+.next-btn.hidden{display:none}
 
-/* Sonraki butonu notların altında */
-.nextBtn {
-    margin-top: 25px;
-    padding: 12px 25px;
-    font-size: 1.1em;
-    border: none;
-    border-radius: 30px;
-    background-color: #ff6f61;
-    color: #fff;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
+/* hidden util */
+.hidden{display:none}
 
-.nextBtn:hover {
-    transform: scale(1.05);
-}
+/* confetti canvas */
+.confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:62}
 
-/* Konfeti */
-.confetti {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: #fff;
-    opacity: 0.8;
-    top: -10px;
-    animation: fall 3s linear forwards;
-}
-
-@keyframes fall {
-    0% {transform: translateY(0) rotate(0deg);}
-    100% {transform: translateY(100vh) rotate(360deg);}
+/* small responsive */
+@media (max-width:640px){
+  .overlay video{width:96%}
+  .title{font-size:28px}
+  .subtitle{font-size:14px}
 }
