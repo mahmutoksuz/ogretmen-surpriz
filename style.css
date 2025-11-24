@@ -11,7 +11,7 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial
 
 /* Intro */
 .center{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px;text-align:center;z-index:10}
-.title{font-size:clamp(20px,4vw,44px);margin:0;color:var(--accent);letter-spacing:0.2px}
+.title{font-size:clamp(20px,4vw,36px);margin:0;color:var(--accent);letter-spacing:0.2px}
 .subtitle{margin:0;color:#304155;opacity:0.9}
 
 /* big button */
@@ -20,7 +20,7 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial
 
 /* video overlay */
 .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:40;backdrop-filter: blur(6px)}
-.overlay video{width:80%;max-width:1200px;height:auto;border-radius:12px;box-shadow:0 30px 80px rgba(2,6,23,0.5);transform:translateY(18px) scale(.98);transition:transform .7s cubic-bezier(.2,.9,.26,1),opacity .5s}
+.overlay video{width:90%;max-width:960px;height:auto;border-radius:12px;box-shadow:0 30px 80px rgba(2,6,23,0.5);transform:translateY(18px) scale(.98);transition:transform .7s cubic-bezier(.2,.9,.26,1),opacity .5s}
 .overlay.show video{transform:translateY(0) scale(1);opacity:1}
 
 /* skip button */
@@ -34,23 +34,23 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial
   flex-direction:column;
   align-items:center;
   justify-content:flex-end;
-  padding-bottom:100px;
-  gap:14px;
+  padding-bottom:80px;
+  gap:10px;
   z-index:50;
   pointer-events:none;
 }
 
 /* Kart tasarımı küçültülmüş ve daha sıkı */
 .card{
-  width:min(640px,86%);
-  max-width:640px;
+  width:min(600px,85%);
+  max-width:600px;
   background:var(--glass);
-  padding:18px 18px;
+  padding:16px;
   border-radius:12px;
-  box-shadow:0 16px 40px rgba(2,6,23,0.10);
-  transform:translateY(28px) scale(.985);
+  box-shadow:0 12px 32px rgba(2,6,23,0.10);
+  transform:translateY(20px) scale(.98);
   opacity:0;
-  transition:transform .7s cubic-bezier(.2,.9,.26,1),opacity .5s;
+  transition:transform .6s cubic-bezier(.2,.9,.26,1),opacity .4s;
   pointer-events:auto;
   overflow:hidden;
 }
@@ -65,32 +65,32 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial
 .card p{
   margin:0;
   color:#09213a;
-  font-size:0.98rem;
-  line-height:1.45;
+  font-size:0.95rem;
+  line-height:1.4;
 }
 
 /* Resimler artık sabit yüksekliğe sahip ve içi dolduracak şekilde */
 .card img{
   width:100%;
-  max-height:1080px;
+  max-height:400px;
   height:100%;
   object-fit:cover;
-  margin-top:12px;
+  margin-top:10px;
   border-radius:10px;
   display:block;
 }
 
 /* Küçük ekranlar için daha sıkı ayar */
 @media (max-width:1080px){
-  .cards-area{padding-bottom:80px; gap:12px}
-  .card{width:92%; max-width:520px; padding:14px}
-  .card p{font-size:0.95rem}
+  .cards-area{padding-bottom:60px; gap:10px}
+  .card{width:92%; max-width:480px; padding:12px}
+  .card p{font-size:0.9rem}
   .card img{max-height:180px; height:180px}
-  .next-btn{bottom:18px;padding:10px 22px}
+  .next-btn{bottom:16px;padding:10px 22px}
 }
 
 /* next button */
-.next-btn{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;padding:12px 28px;border-radius:999px;border:0;background:linear-gradient(90deg,var(--accent),#ff8a6b);color:white;font-weight:700;z-index:60;cursor:pointer;box-shadow:0 14px 36px rgba(17,24,39,0.12)}
+.next-btn{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;padding:12px 28px;border-radius:999px;border:0;background:linear-gradient(90deg,var(--accent),#ff8a6b);color:white;font-weight:700;z-index:60;cursor:pointer;box-shadow:0 12px 32px rgba(17,24,39,0.12)}
 .next-btn.hidden{display:none}
 
 /* hidden util */
@@ -102,6 +102,6 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial
 /* small responsive */
 @media (max-width:640px){
   .overlay video{width:96%}
-  .title{font-size:28px}
+  .title{font-size:26px}
   .subtitle{font-size:14px}
 }
